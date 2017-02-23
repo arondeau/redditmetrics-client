@@ -13,3 +13,7 @@ $ lein repl
 ...
 redditmetrics-client.core=> (show-scatterplot-with-trendline-for-subreddit "IAmA" 365)
 ```
+
+# Requirements
+
+* Leiningen
