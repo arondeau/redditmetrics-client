@@ -8,3 +8,4 @@
                  [org.clojure/data.json "0.2.6"]
                  [incanter "1.5.7"]]
   :main redditmetrics-client.core)
+

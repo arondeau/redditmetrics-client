@@ -38,3 +38,22 @@
 
 ;; usage 
 ;; (show-scatterplot-with-trendline-for-subreddit "DIY" 30)
+
+(defn degrees-of-trendline [X Y]
+  (let [lm (stats/linear-model X Y)
+        fitted (:fitted lm)
+        intercept (first fitted)
+        x1 (second X)
+        x2 (first (rest (rest X)))
+        y1 (+ intercept (second fitted))
+        y2 (+ intercept (first (rest (rest fitted))))
+        tan-alpha (Math/atan (/ (- y2 y1) (- x2 x1)))]
+    (* tan-alpha (/ 360.0 (* 2 Math/PI)))))
+
+(defn degrees-for-subreddit [subreddit-name days]
+  (let  [time-series (take-last days (get-timeseries-for-subreddit subreddit-name))
+         X (range 0 (count time-series))
+         Y (map #(:a %) time-series)]
+    (degrees-of-trendline X Y)))
+
+
