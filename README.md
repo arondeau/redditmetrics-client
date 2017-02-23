@@ -8,9 +8,10 @@ Scatter-plot and trendline for subscriber growth for a particular subreddit. Bas
 
 For example: Show scatter-plot and subscriber growth trendline for "IAmA" subreddit in the past 365 days:
 
-```
+```bash
 $ lein repl
-...
+```
+```clojure
 redditmetrics-client.core=> (show-scatterplot-with-trendline-for-subreddit "IAmA" 365)
 ```
 
