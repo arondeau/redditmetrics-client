@@ -26,8 +26,8 @@
   (map #(:a %) 
        (get-data-series (get-json-response (get-subreddit-http-response subreddit-name)))))
 
-(defn make-scatter-plot-chart [X Y]
-	  (charts/xy-plot X Y))
+(defn make-scatter-plot-chart [X Y subreddit-name]
+	  (charts/scatter-plot X Y :title subreddit-name :x-label "Days" :y-label "Subscribers"))
 
 (defn ols-linear-model [Y X]
   			(stats/linear-model Y X))
@@ -37,9 +37,8 @@
         X (range 0 (count time-series))
         Y (map #(:a %) time-series)]
     (incanter/view (charts/add-lines 
-                    (make-scatter-plot-chart X Y)
+                    (make-scatter-plot-chart X Y (str "Subscriber Growth '" subreddit-name "' past " day-count " days"))
                     X (:fitted (ols-linear-model Y X))))))
-
 
 ;; usage 
 ;; (show-scatterplot-with-trendline-for-subreddit "DIY" 30)
