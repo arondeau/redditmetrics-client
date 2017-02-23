@@ -4,7 +4,7 @@ Scatter-plot and trendline for subscriber growth for a particular subreddit. Bas
 
 # Usage
 
-![IAmA Trendline](https://raw.githubusercontent.com/arondeau/redditmetrics-client/master/iama365.png)
+![IAmA Trendline](https://raw.githubusercontent.com/arondeau/redditmetrics-client/master/iama365_scatter.png)
 
 For example: Show scatter-plot and subscriber growth trendline for "IAmA" subreddit in the past 365 days:
 
