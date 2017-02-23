@@ -22,10 +22,6 @@
 (defn get-timeseries-for-subreddit [subreddit-name]
   (get-data-series (get-json-response (get-subreddit-http-response subreddit-name))))
 
-(defn get-dataset-for-subreddit [subreddit-name]
-  (map #(:a %) 
-       (get-data-series (get-json-response (get-subreddit-http-response subreddit-name)))))
-
 (defn make-scatter-plot-chart [X Y subreddit-name]
 	  (charts/scatter-plot X Y :title subreddit-name :x-label "Days" :y-label "Subscribers"))
 
