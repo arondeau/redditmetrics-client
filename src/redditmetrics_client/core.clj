@@ -39,21 +39,32 @@
 ;; usage 
 ;; (show-scatterplot-with-trendline-for-subreddit "DIY" 30)
 
-(defn degrees-of-trendline [X Y]
-  (let [lm (stats/linear-model X Y)
-        fitted (:fitted lm)
-        intercept (first fitted)
-        x1 (second X)
-        x2 (first (rest (rest X)))
-        y1 (+ intercept (second fitted))
-        y2 (+ intercept (first (rest (rest fitted))))
-        tan-alpha (Math/atan (/ (- y2 y1) (- x2 x1)))]
-    (* tan-alpha (/ 360.0 (* 2 Math/PI)))))
 
-(defn degrees-for-subreddit [subreddit-name days]
-  (let  [time-series (take-last days (get-timeseries-for-subreddit subreddit-name))
-         X (range 0 (count time-series))
-         Y (map #(:a %) time-series)]
-    (degrees-of-trendline X Y)))
+(defn calculate-slope-degrees [X Y]
+  (cond 
+   (= 1 (count X)) (double 0.0)
+   (= 0 (second X)) (double 90.0)
+   :else (Math/toDegrees 
+          (Math/atan (/ (- (second Y)
+                           (first Y))
+                        (- (second X)
+                           (first X)))))))
 
+(defn get-data-for-subreddit [name]
+  (let [raw-response (client/post "http://redditmetrics.com/ajax/compare.reddits" {:form-params {:reddit0 name}})
+        json-body (clojure.walk/keywordize-keys (json/read-str (:body raw-response)))
+        data (->> json-body 
+                  :message 
+                  :growth 
+                  :data)]
+    (cond (>= 2  (count data)) '(() ())
+          :else (let [x-range (range (count data))
+                      lm (stats/linear-model x-range (map #(:a %) data))
+                      y-range (lazy-seq (:fitted lm))]
+                  (list x-range y-range)))))
 
+(defn calculate-slope-degrees-for-subreddit [name days]
+  (let [data (get-data-for-subreddit name)]
+    (cond (>= 0 days) 0.0
+          (= 0 (count (get-data-for-subreddit name))) 0.0
+          :else (calculate-slope-degrees (take-last days  (first data)) (take-last days (second data))))))
